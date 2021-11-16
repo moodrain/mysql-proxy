@@ -1,7 +1,9 @@
 package lib
 
 import (
+	"fmt"
 	"net"
+	"strconv"
 )
 
 type ProxyConn struct {
@@ -11,6 +13,7 @@ type ProxyConn struct {
 	InitHandshakePacket   Packet
 	FinishHandshakePacket Packet
 
+	ID          int
 	clientClose bool
 }
 
@@ -35,10 +38,12 @@ func (p ProxyConn) IsClientClose() bool {
 func (p *ProxyConn) CloseClient() {
 	p.clientClose = true
 	p.ClientConn.Close()
+	fmt.Println("Connection " + strconv.Itoa(p.ID) + " 's client close")
 }
 
 func (p *ProxyConn) Close() {
 	p.clientClose = true
+	fmt.Println("Connection " + strconv.Itoa(p.ID) + " close")
 	p.ClientConn.Close()
 	p.MysqlConn.Close()
 }
